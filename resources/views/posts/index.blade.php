@@ -37,6 +37,7 @@
                     <td>{{ $post->created_at->diffForHumans() }}</td>
                     <td>
                         <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="{{ route('posts.delete', $post) }}" class="btn btn-sm btn-danger">Delete</a>
                     </td>
                 </tr>
             @endforeach

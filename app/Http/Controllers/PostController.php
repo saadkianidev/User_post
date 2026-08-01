@@ -60,6 +60,53 @@ class PostController extends Controller
     {
         $this->authorize('view', $post);
 
-        return view('posts.index', compact('post'));
+        return view('posts.edit', compact('post'));
+    }
+
+    public function update(Post $post, Request $request)
+    {
+        $this->authorize('update', $post);
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'img' => ['nullable', 'image', 'max:5120'],
+            'status' => ['required', 'in:draft,live'],
+        ]);
+
+        $imageUrl = $post->img;
+
+        // if ($request->hasFile('img')) {
+        //     $file = $request->file('img');
+        //     $storage = Firebase::storage()->getBucket();
+
+        //     $filename = 'posts/'.uniqid().'_'.$file->getClientOriginalName();
+
+        //     $object = $storage->upload(
+        //         fopen($file->getRealPath(), 'r'),
+        //         ['name' => $filename]
+        //     );
+
+        //     $object->update(['acl' => []], ['predefinedAcl' => 'publicRead']);
+        //     $imageUrl = "https://storage.googleapis.com/{$storage->name()}/{$filename}";
+        // }
+
+        $post->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'img' => $imageUrl,
+            'status' => $validated['status'],
+        ]);
+
+        return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
+    }
+
+    public function delete(Post $post)
+    {
+        $this->authorize('delete', $post);
+
+        $post->delete();
+
+        return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
     }
 }

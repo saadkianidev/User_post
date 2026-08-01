@@ -1,17 +1,23 @@
   <style>
+      :root {
+          --color-primary: #4f46e5;
+          --color-secondary: #22c55e;
+          --color-bg: #ffffff;
+      }
 
-    :root {
-        --bs-body-color: #212529;
-        --bs-body-bg: #fff;
-    }
-.site-header{
-
-}
+      .site-header {
+        background-color: var(--color-primary) !important;
+        color: var(--color-bg) !important;
+      }
+      .btn-outline-secondary{
+        color: var(--color-bg) !important;
+        border-color: var(--color-bg) !important;
+      }
   </style>
 
   <header class="site-header border-bottom bg-white">
       <nav class="navbar navbar-expand-lg px-3">
-          <span class="navbar-brand fw-bold">Engineer Yourself</span>
+          <span class="navbar-brand fw-bold" style="color: var(--color-bg);">Engineer Yourself</span>
 
           <div class="ms-auto dropdown">
               <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2" type="button"

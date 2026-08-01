@@ -2,6 +2,9 @@
 
 @push('styles')
     <link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <style>
+
+    </style>
 @endpush
 
 @section('content')

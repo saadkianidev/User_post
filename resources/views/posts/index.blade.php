@@ -21,11 +21,16 @@
                 <th>Description</th>
                 <th>Status</th>
                 <th>Created</th>
+                <th>Image</th>
                 <th>Action</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach ($posts as $post)
+                {{-- @php
+                    dd($post->img);
+                @endphp --}}
                 <tr>
                     <td>{{ $post->title }}</td>
                     <td>{{ Str::limit(strip_tags($post->description), 80) }}</td>
@@ -35,6 +40,12 @@
                         </span>
                     </td>
                     <td>{{ $post->created_at->diffForHumans() }}</td>
+                    <td>
+                        @if ($post->img)
+                            <img src="{{ $post->img }}" alt="{{ $post->title }}" class="img-thumbnail"
+                                style="max-width: 100px; max-height: 100px;">
+                        @endif
+                    </td>
                     <td>
                         <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-primary">Edit</a>
                         <a href="{{ route('posts.delete', $post) }}" class="btn btn-sm btn-danger">Delete</a>
@@ -50,7 +61,7 @@
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#postsTable').DataTable();
         });
     </script>

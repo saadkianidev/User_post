@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class PostController extends Controller
 {
@@ -12,6 +11,7 @@ class PostController extends Controller
     {
         $posts = auth()->user()->posts()->latest()->get();
 
+        // dd($posts);
         return view('posts.index', compact('posts'));
     }
 
@@ -29,27 +29,21 @@ class PostController extends Controller
             'status' => ['required', 'in:draft,live'],
         ]);
 
-        $imageUrl = null;
+        $imagePath = null;
 
         if ($request->hasFile('img')) {
             $file = $request->file('img');
-            $storage = Firebase::storage()->getBucket();
+            $filename = uniqid().'_'.$file->getClientOriginalName();
 
-            $filename = 'posts/'.uniqid().'_'.$file->getClientOriginalName();
+            $file->storeAs('posts', $filename, 'public');
 
-            $object = $storage->upload(
-                fopen($file->getRealPath(), 'r'),
-                ['name' => $filename]
-            );
-
-            $object->update(['acl' => []], ['predefinedAcl' => 'publicRead']);
-            $imageUrl = "https://storage.googleapis.com/{$storage->name()}/{$filename}";
+            $imagePath = 'posts/'.$filename;
         }
 
         auth()->user()->posts()->create([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'img' => $imageUrl,
+            'img' => $imagePath,
             'status' => $validated['status'],
         ]);
 
@@ -75,21 +69,6 @@ class PostController extends Controller
         ]);
 
         $imageUrl = $post->img;
-
-        // if ($request->hasFile('img')) {
-        //     $file = $request->file('img');
-        //     $storage = Firebase::storage()->getBucket();
-
-        //     $filename = 'posts/'.uniqid().'_'.$file->getClientOriginalName();
-
-        //     $object = $storage->upload(
-        //         fopen($file->getRealPath(), 'r'),
-        //         ['name' => $filename]
-        //     );
-
-        //     $object->update(['acl' => []], ['predefinedAcl' => 'publicRead']);
-        //     $imageUrl = "https://storage.googleapis.com/{$storage->name()}/{$filename}";
-        // }
 
         $post->update([
             'title' => $validated['title'],

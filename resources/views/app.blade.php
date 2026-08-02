@@ -9,25 +9,41 @@
     <title>Enigneer Yourself</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('') }}" type="image/png">
-
+    <!-- <link rel="shortcut icon" href="{{ asset('') }}" type="image/png">/ -->
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <!-- <link rel="stylesheet" href="{{ asset('css/main.css') }}"> -->
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import {
-            initializeApp
-        } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
-        import {
-            getAnalytics
-        } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
+    {{-- Theme: server-rendered so colors are correct even before JS runs / on a new device --}}
+    @php
+        $userTheme = auth()->check() ? auth()->user()->theme : null;
+    @endphp
+    <style>
+        :root {
+            --color-primary: {{ $userTheme->primary_color ?? '#4f46e5' }};
+            --color-secondary: {{ $userTheme->secondary_color ?? '#22c55e' }};
+            --color-bg: {{ $userTheme->bg_color ?? '#ffffff' }};
+        }
+    </style>
 
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    {{-- Theme: localStorage override for instant same-browser repeat visits (must run before styles below paint) --}}
+    <script>
+        (function () {
+            const saved = JSON.parse(localStorage.getItem('siteTheme') || '{}');
+            const root = document.documentElement;
+            if (saved.primary) root.style.setProperty('--color-primary', saved.primary);
+            if (saved.secondary) root.style.setProperty('--color-secondary', saved.secondary);
+            if (saved.bg) root.style.setProperty('--color-bg', saved.bg);
+        })();
+    </script>
+
+    @stack('styles')
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-analytics.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyAw49szMrxV3qPKXKixWhFv68zKeYfdm7U",
             authDomain: "social-media-app-1831e.firebaseapp.com",
@@ -38,7 +54,6 @@
             measurementId: "G-X3EDWS6055"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
     </script>
@@ -57,6 +72,12 @@
     </div>
 
     @include('partials.footer')
+
+    @auth
+        @include('partials.theme-customizer')
+    @endauth
+
+    @stack('scripts')
 
 </body>
 

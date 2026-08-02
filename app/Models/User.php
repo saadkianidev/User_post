@@ -41,4 +41,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserDetail::class);
     }
+
+    public function theme()
+    {
+        return $this->hasOne(UserTheme::class);
+    }
+    
 }

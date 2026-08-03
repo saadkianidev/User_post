@@ -31,7 +31,7 @@
     @else
         <div class="ig-grid">
             @foreach ($posts as $post)
-                <a href="{{ route('posts.show', $post) }}" class="ig-tile">
+                <a href="" class="ig-tile">
                     @if ($post->img)
                         <img src="{{ Storage::url($post->img) }}" alt="{{ $post->title }}">
                     @else

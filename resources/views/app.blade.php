@@ -9,7 +9,7 @@
     <title>Enigneer Yourself</title>
 
     <!-- Favicon -->
-    <!-- <link rel="shortcut icon" href="{{ asset('') }}" type="image/png">/ -->
+    <link rel="shortcut icon" href="{{ asset('') }}" type="image/png">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -27,7 +27,6 @@
         }
     </style>
 
-    {{-- Theme: localStorage override for instant same-browser repeat visits (must run before styles below paint) --}}
     <script>
         (function () {
             const saved = JSON.parse(localStorage.getItem('siteTheme') || '{}');

@@ -1,22 +1,6 @@
 @extends('app')
 
 @push('styles')
-   @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#postsTable').DataTable({
-                responsive: true,
-                order: [[3, 'desc']],
-                columnDefs: [{ orderable: false, targets: -1 }],
-            });
-        });
-    </script>
-@endpush
     <style>
         .stat-card {
             border: none; border-radius: 16px; padding: 1.25rem;
@@ -54,9 +38,9 @@
             <p class="text-muted small mb-0">Manage and browse everything you've published</p>
         </div>
         <div class="d-flex gap-2">
-            <!-- <a href="{{ route('posts.grid') }}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+            <a href="{{ route('posts.grid') }}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
                 <i class="bi bi-grid-3x3-gap-fill"></i> Grid View
-            </a> -->
+            </a>
             <a href="{{ route('posts.create') }}" class="btn btn-primary d-flex align-items-center gap-2"
                style="background-color: var(--color-primary); border-color: var(--color-primary);">
                 <i class="bi bi-plus-lg"></i> New Post
@@ -64,53 +48,7 @@
         </div>
     </div>
 
-    {{-- Stat cards --}}
-    <div class="row g-3 mb-4">
-        <div class="col-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: var(--color-secondary);">
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                </div>
-                <div>
-                    <div class="stat-value">{{ $stats['total'] }}</div>
-                    <div class="stat-label">Total Posts</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: var(--color-secondary);">
-                    <i class="bi bi-broadcast"></i>
-                </div>
-                <div>
-                    <div class="stat-value">{{ $stats['live'] }}</div>
-                    <div class="stat-label">Live</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: var(--color-secondary);">
-                    <i class="bi bi-pencil-square"></i>
-                </div>
-                <div>
-                    <div class="stat-value">{{ $stats['draft'] }}</div>
-                    <div class="stat-label">Drafts</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: var(--color-secondary);">
-                    <i class="bi bi-image-fill"></i>
-                </div>
-                <div>
-                    <div class="stat-value">{{ $stats['images'] }}</div>
-                    <div class="stat-label">With Images</div>
-                </div>
-            </div>
-        </div>
-    </div>
+   
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -133,7 +71,7 @@
                         <td>
                             <div class="d-flex align-items-center gap-3">
                                 @if ($post->img)
-                                    <img src="{{ Storage::url($post->img) }}" alt="{{ $post->title }}" class="post-thumb">
+                                    <img src="{{ $post->img }}" alt="{{ $post->title }}" class="post-thumb">
                                 @else
                                     <div class="post-thumb-placeholder"><i class="bi bi-image"></i></div>
                                 @endif
@@ -172,16 +110,22 @@
     </div>
 @endsection
 
-<script>
-    $(document).ready(function () {
-        if ($.fn.DataTable.isDataTable('#postsTable')) {
-            $('#postsTable').DataTable().destroy();
-        }
-
-        $('#postsTable').DataTable({
-            responsive: true,
-            order: [[3, 'desc']],
-            columnDefs: [{ orderable: false, targets: -1 }],
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            if ($.fn.DataTable.isDataTable('#postsTable')) {
+                $('#postsTable').DataTable().destroy();
+            }
+            $('#postsTable').DataTable({
+                responsive: true,
+                order: [[3, 'desc']],
+                columnDefs: [{ orderable: false, targets: -1 }],
+            });
         });
-    });
-</script>
+    </script>
+@endpush

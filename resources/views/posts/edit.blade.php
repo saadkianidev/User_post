@@ -1,73 +1,71 @@
 @extends('app')
 
 @section('content')
-    <h2 class="mb-4">Account Settings</h2>
+    <a href="{{ route('posts.index') }}" class="btn btn-sm btn-outline-secondary mb-3">
+        <i class="bi bi-arrow-left"></i> Back to Posts
+    </a>
 
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <div class="card border-0 shadow-sm p-4" style="border-radius: 16px; max-width: 700px;">
+        <h3 class="mb-4">Edit Post</h3>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-    <form method="POST" action="{{ route('settings.update') }}">
-        @csrf
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" name="title" id="title"
+                       class="form-control @error('title') is-invalid @enderror"
+                       value="{{ old('title', $post->title) }}" required>
+                @error('title')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <h5 class="mb-3">Profile</h5>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="description" id="description" rows="5"
+                          class="form-control @error('description') is-invalid @enderror"
+                          required>{{ old('description', $post->description) }}</textarea>
+                @error('description')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" name="name" id="name"
-                   class="form-control @error('name') is-invalid @enderror"
-                   value="{{ old('name', $user->name) }}" required>
-        </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select @error('status') is-invalid @enderror" required>
+                    <option value="draft" {{ old('status', $post->status) === 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="live" {{ old('status', $post->status) === 'live' ? 'selected' : '' }}>Live</option>
+                </select>
+                @error('status')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" name="email" id="email"
-                   class="form-control @error('email') is-invalid @enderror"
-                   value="{{ old('email', $user->email) }}" required>
-        </div>
+            <div class="mb-3">
+                <label for="img" class="form-label">Image</label>
+                @if ($post->img)
+                    <div class="mb-2">
+                        <img src="{{ Storage::url($post->img) }}" alt="{{ $post->title }}"
+                             class="img-thumbnail" style="max-width: 150px;">
+                    </div>
+                @endif
+                <input type="file" name="img" id="img"
+                       class="form-control @error('img') is-invalid @enderror" accept="image/*">
+                <div class="form-text">Leave empty to keep the current image.</div>
+                @error('img')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <div class="mb-3">
-            <label for="phone" class="form-label">Phone</label>
-            <input type="text" name="phone" id="phone"
-                   class="form-control @error('phone') is-invalid @enderror"
-                   value="{{ old('phone', $user->detail->phone ?? '') }}">
-        </div>
-
-        <div class="mb-3">
-            <label for="address" class="form-label">Address</label>
-            <input type="text" name="address" id="address"
-                   class="form-control @error('address') is-invalid @enderror"
-                   value="{{ old('address', $user->detail->address ?? '') }}">
-        </div>
-
-        <hr class="my-4">
-
-        <h5 class="mb-3">Change Password</h5>
-        <p class="text-muted small">Leave blank to keep your current password.</p>
-
-        <div class="mb-3">
-            <label for="password" class="form-label">New Password</label>
-            <input type="password" name="password" id="password"
-                   class="form-control @error('password') is-invalid @enderror">
-        </div>
-
-        <div class="mb-3">
-            <label for="password_confirmation" class="form-label">Confirm New Password</label>
-            <input type="password" name="password_confirmation" id="password_confirmation"
-                   class="form-control">
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
-
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary"
+                        style="background-color: var(--color-primary); border-color: var(--color-primary);">
+                    Save Changes
+                </button>
+                <a href="{{ route('posts.index') }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
 @endsection

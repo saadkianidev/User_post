@@ -11,8 +11,14 @@ class PostController extends Controller
     {
         $posts = auth()->user()->posts()->latest()->get();
 
-        // dd($posts);
-        return view('posts.index', compact('posts'));
+        $stats = [
+            'total' => $posts->count(),
+            'live' => $posts->where('status', 'live')->count(),
+            'draft' => $posts->where('status', '!=', 'live')->count(),
+            'images' => $posts->whereNotNull('img')->where('img', '!=', '')->count(),
+        ];
+
+        return view('posts.index', compact('posts', 'stats'));
     }
 
     public function create()
@@ -33,11 +39,11 @@ class PostController extends Controller
 
         if ($request->hasFile('img')) {
             $file = $request->file('img');
-            $filename = uniqid().'_'.$file->getClientOriginalName();
+            $filename = uniqid() . '_' . $file->getClientOriginalName();
 
             $file->storeAs('posts', $filename, 'public');
 
-            $imagePath = 'posts/'.$filename;
+            $imagePath = 'posts/' . $filename;
         }
 
         auth()->user()->posts()->create([
@@ -68,21 +74,50 @@ class PostController extends Controller
             'status' => ['required', 'in:draft,live'],
         ]);
 
-        $imageUrl = $post->img;
+        $imagePath = $post->img;
+
+        if ($request->hasFile('img')) {
+            if ($post->img) {
+                \Storage::disk('public')->delete($post->img);
+            }
+
+            $file = $request->file('img');
+            $filename = uniqid() . '_' . $file->getClientOriginalName();
+            $file->storeAs('posts', $filename, 'public');
+            $imagePath = 'posts/' . $filename;
+        }
 
         $post->update([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'img' => $imageUrl,
+            'img' => $imagePath,
             'status' => $validated['status'],
         ]);
 
         return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
     }
 
-    public function delete(Post $post)
+    public function show(Post $post)
+    {
+        $this->authorize('view', $post);
+
+        return view('posts.show', compact('post'));
+    }
+
+    public function grid()
+    {
+        $posts = auth()->user()->posts()->latest()->get();
+
+        return view('posts.grid', compact('posts'));
+    }
+
+    public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
+
+        if ($post->img) {
+            \Storage::disk('public')->delete($post->img);
+        }
 
         $post->delete();
 

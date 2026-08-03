@@ -20,9 +20,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/dashboard', [PostController::class, 'index'])->name('posts.index');
-
+    Route::get('/posts/all', [PostController::class, 'allPosts'])->name('posts.allposts');
     Route::get('/posts/grid', [PostController::class, 'grid'])->name('posts.grid');
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');

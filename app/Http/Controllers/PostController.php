@@ -39,11 +39,11 @@ class PostController extends Controller
 
         if ($request->hasFile('img')) {
             $file = $request->file('img');
-            $filename = uniqid() . '_' . $file->getClientOriginalName();
+            $filename = uniqid().'_'.$file->getClientOriginalName();
 
             $file->storeAs('posts', $filename, 'public');
 
-            $imagePath = 'posts/' . $filename;
+            $imagePath = 'posts/'.$filename;
         }
 
         auth()->user()->posts()->create([
@@ -82,9 +82,9 @@ class PostController extends Controller
             }
 
             $file = $request->file('img');
-            $filename = uniqid() . '_' . $file->getClientOriginalName();
+            $filename = uniqid().'_'.$file->getClientOriginalName();
             $file->storeAs('posts', $filename, 'public');
-            $imagePath = 'posts/' . $filename;
+            $imagePath = 'posts/'.$filename;
         }
 
         $post->update([
@@ -122,5 +122,12 @@ class PostController extends Controller
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
+    }
+
+    public function allPosts()
+    {
+        $posts = Post::with('user')->latest()->get();
+
+        return view('posts.all', compact('posts'));
     }
 }

@@ -14,7 +14,7 @@
     }
 
     .site-sidebar .nav-link.active {
-        background-color: rgba(255,255,255,.2);
+        background-color: rgba(255, 255, 255, .2);
         font-weight: 600;
     }
 
@@ -30,7 +30,7 @@
             height: 64px;
             padding: 0 !important;
             z-index: 1040;
-            box-shadow: 0 -2px 10px rgba(0,0,0,.15);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, .15);
         }
 
         .site-sidebar .nav {
@@ -63,20 +63,23 @@
 
 <aside class="site-sidebar text-white p-3">
     <nav class="nav flex-column gap-2">
-        <a href="{{ route('posts.index') }}"
-            class="nav-link {{ request()->routeIs('posts.index') ? 'active' : '' }}">
+        <a href="{{ route('posts.index') }}" class="nav-link {{ request()->routeIs('posts.index') ? 'active' : '' }}">
             <i class="bi bi-list-ul"></i>
             <span>My Posts</span>
         </a>
-        <a href="{{ route('posts.grid') }}"
-            class="nav-link {{ request()->routeIs('posts.grid') ? 'active' : '' }}">
+        <a href="{{ route('posts.grid') }}" class="nav-link {{ request()->routeIs('posts.grid') ? 'active' : '' }}">
             <i class="bi bi-grid-3x3-gap-fill"></i>
             <span>Grid View</span>
         </a>
-        <a href="{{ route('posts.create') }}"
-            class="nav-link {{ request()->routeIs('posts.create') ? 'active' : '' }}">
+        <a href="{{ route('posts.create') }}" class="nav-link {{ request()->routeIs('posts.create') ? 'active' : '' }}">
             <i class="bi bi-plus-circle-fill"></i>
             <span>New Post</span>
         </a>
+
+        <a href="{{ route('posts.allposts') }}" class="nav-link {{ request()->routeIs('posts.allposts') ? 'active' : '' }}">
+            <i class="bi bi-grid-3x3-gap-fill"></i>
+            <span>All Posts</span>
+        </a>
+
     </nav>
 </aside>

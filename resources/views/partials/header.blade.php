@@ -10,7 +10,7 @@
     }
 
     .site-header .btn-outline-secondary:hover {
-        background-color: rgba(255,255,255,.15) !important;
+        background-color: rgba(255, 255, 255, .15) !important;
     }
 </style>
 
@@ -25,7 +25,9 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="{{ route('settings') }}">Settings</a></li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

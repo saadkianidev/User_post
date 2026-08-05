@@ -5,6 +5,7 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
 
@@ -34,4 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/settings', [IndexController::class, 'updateSettings'])->name('settings.update');
 
     Route::post('/theme/update', [ThemeController::class, 'update'])->name('theme.update');
+
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users/{user}/message', [UserController::class, 'sendMessage'])->name('users.message');
 });

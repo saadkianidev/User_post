@@ -76,9 +76,14 @@
             <span>New Post</span>
         </a>
 
-        <a href="{{ route('posts.allposts') }}" class="nav-link {{ request()->routeIs('posts.allposts') ? 'active' : '' }}">
+        <a href="{{ route('posts.allposts') }}"
+            class="nav-link {{ request()->routeIs('posts.allposts') ? 'active' : '' }}">
             <i class="bi bi-grid-3x3-gap-fill"></i>
             <span>All Posts</span>
+        </a>
+        <a href="{{ route('users.index') }}" class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}">
+            <i class="bi bi-people-fill"></i>
+            <span>All Users</span>
         </a>
 
     </nav>

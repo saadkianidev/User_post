@@ -37,8 +37,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/theme/update', [ThemeController::class, 'update'])->name('theme.update');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
     Route::middleware(['auth'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
         Route::post('/users/{user}/message', [UserController::class, 'sendMessage'])->name('users.message');
+        Route::post('/notifications/mark-as-read', [UserController::class, 'markAsRead'])->name('notifications.read');
     });
 });

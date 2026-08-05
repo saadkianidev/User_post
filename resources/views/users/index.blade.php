@@ -36,7 +36,6 @@
                 columnDefs: [{ orderable: false, targets: -1 }],
             });
 
-            // Message modal
             $(document).on('click', '.message-btn', function() {
                 $('#recipient-id').val($(this).data('id'));
                 $('#recipient-name').text($(this).data('name'));

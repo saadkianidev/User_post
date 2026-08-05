@@ -8,7 +8,7 @@
     <div class="card border-0 shadow-sm" style="border-radius: 16px; max-width: 800px;">
         @if ($post->img)
             <img src="{{ Storage::url($post->img) }}" alt="{{ $post->title }}" class="card-img-top"
-                 style="max-height: 420px; object-fit: cover; border-radius: 16px 16px 0 0;">
+                 style="max-height: 520px; object-fit: fill; border-radius: 16px 16px 0 0;">
         @endif
         <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-start mb-2">

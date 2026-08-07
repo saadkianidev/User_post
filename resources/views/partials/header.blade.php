@@ -52,9 +52,22 @@
                     <div id="notif-list" style="max-height: 320px; overflow-y: auto;">
                         @forelse($recentNotifs as $notif)
                             <a href="#" class="dropdown-item px-3 py-2 border-bottom">
-                                <div class="notif-sender text-primary">{{ $notif->data['sender_name'] }}</div>
-                                <div class="notif-text text-muted">{{ $notif->data['content'] }}</div>
-                                <div class="notif-time">{{ $notif->created_at->diffForHumans() }}</div>
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="notif-sender text-primary">{{ $notif->data['sender_name'] }}</div>
+                                        <div class="notif-text text-muted">{{ $notif->data['content'] }}</div>
+                                        @if(!empty($notif->data['is_reply']))
+                                            <span class="badge bg-info bg-opacity-10 text-info-emphasis"><i class="bi bi-reply-fill me-1"></i>Reply</span>
+                                        @endif
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary reply-btn ms-2" 
+                                            data-user-id="{{ $notif->data['sender_id'] }}" 
+                                            data-user-name="{{ $notif->data['sender_name'] }}" 
+                                            data-message-id="{{ $notif->data['message_id'] }}">
+                                        <i class="bi bi-reply"></i>
+                                    </button>
+                                </div>
+                                <div class="notif-time mt-1">{{ $notif->created_at->diffForHumans() }}</div>
                             </a>
                         @empty
                             <li class="dropdown-item text-muted text-center py-3" id="no-notifs">No new notifications</li>
@@ -117,15 +130,31 @@
             const noNotifs = document.getElementById('no-notifs');
             if (noNotifs) noNotifs.remove();
 
-            // 3. Prepend new notification to dropdown
+            // 3. Prepend new notification to dropdown with reply button
             const list = document.getElementById('notif-list');
             const item = document.createElement('a');
             item.href = '#';
             item.className = 'dropdown-item px-3 py-2 border-bottom notif-new';
+            
+            const isReply = notification.data.is_reply ? `<span class="badge bg-info bg-opacity-10 text-info-emphasis"><i class="bi bi-reply-fill me-1"></i>Reply</span>` : '';
+            const replyBtn = `
+                <button class="btn btn-sm btn-outline-primary reply-btn ms-2" 
+                        data-user-id="${notification.data.sender_id}" 
+                        data-user-name="${notification.data.sender_name}" 
+                        data-message-id="${notification.data.message_id}">
+                    <i class="bi bi-reply"></i>
+                </button>`;
+            
             item.innerHTML = `
-                <div class="notif-sender text-primary">${notification.data.sender_name}</div>
-                <div class="notif-text text-muted">${notification.data.content}</div>
-                <div class="notif-time">Just now</div>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <div class="notif-sender text-primary">${notification.data.sender_name}</div>
+                        <div class="notif-text text-muted">${notification.data.content}</div>
+                        ${isReply}
+                    </div>
+                    ${replyBtn}
+                </div>
+                <div class="notif-time mt-1">Just now</div>
             `;
             list.insertBefore(item, list.firstChild);
 
@@ -163,4 +192,33 @@
     if ('Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission();
     }
+
+    // Global handler for reply buttons (delegated event)
+    document.addEventListener('click', function(e) {
+        const replyBtn = e.target.closest('.reply-btn');
+        if (!replyBtn) return;
+        
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const userId = replyBtn.dataset.userId;
+        const userName = replyBtn.dataset.userName;
+        const parentMsgId = replyBtn.dataset.messageId;
+        
+        // Open message modal with reply context
+        document.getElementById('recipient-id').value = userId;
+        document.getElementById('recipient-name').textContent = userName;
+        document.getElementById('parent-id').value = parentMsgId;
+        document.getElementById('message-text').value = '';
+        document.getElementById('char-count').textContent = '0';
+        document.getElementById('modal-title-prefix').textContent = 'Reply to ';
+        document.getElementById('send-btn-text').textContent = 'Send Reply';
+        
+        // Close notification dropdown
+        document.getElementById('notif-toggle').click();
+        
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('messageModal'));
+        modal.show();
+    });
 </script>

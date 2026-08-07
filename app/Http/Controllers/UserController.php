@@ -26,6 +26,7 @@ class UserController extends Controller
             'sender_id'   => Auth::id(),
             'receiver_id' => $user->id,
             'content'     => $request->message,
+            'parent_id'   => $request->parent_id ?? null,
         ]);
 
         $message->load('sender');

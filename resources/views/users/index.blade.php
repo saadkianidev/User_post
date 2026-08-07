@@ -37,10 +37,40 @@
             });
 
             $(document).on('click', '.message-btn', function() {
-                $('#recipient-id').val($(this).data('id'));
-                $('#recipient-name').text($(this).data('name'));
+                const userId = $(this).data('id');
+                const userName = $(this).data('name');
+                const parentMsgId = $(this).data('parent-id') || null;
+                const isReply = parentMsgId !== null;
+                
+                $('#recipient-id').val(userId);
+                $('#recipient-name').text(userName);
+                $('#parent-id').val(parentMsgId);
                 $('#message-text').val('');
                 $('#char-count').text('0');
+                
+                if (isReply) {
+                    $('#modal-title-prefix').text('Reply to ');
+                    $('#send-btn-text').text('Send Reply');
+                } else {
+                    $('#modal-title-prefix').text('Message ');
+                    $('#send-btn-text').text('Send Message');
+                }
+                
+                $('#messageModal').modal('show');
+            });
+
+            $(document).on('click', '.reply-btn', function() {
+                const userId = $(this).data('user-id');
+                const userName = $(this).data('user-name');
+                const parentMsgId = $(this).data('message-id');
+                
+                $('#recipient-id').val(userId);
+                $('#recipient-name').text(userName);
+                $('#parent-id').val(parentMsgId);
+                $('#message-text').val('');
+                $('#char-count').text('0');
+                $('#modal-title-prefix').text('Reply to ');
+                $('#send-btn-text').text('Send Reply');
                 $('#messageModal').modal('show');
             });
 
@@ -64,7 +94,8 @@
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
-                        message: message
+                        message: message,
+                        parent_id: $('#parent-id').val()
                     },
                     success: function(response) {
                         $('#messageModal').modal('hide');
@@ -143,7 +174,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">
                         <i class="bi bi-chat-dots-fill me-2 text-primary"></i>
-                        Message <span id="recipient-name" class="fw-bold"></span>
+                        <span id="modal-title-prefix">Message </span><span id="recipient-name" class="fw-bold"></span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -151,6 +182,7 @@
                     @csrf
                     <div class="modal-body">
                         <input type="hidden" id="recipient-id">
+                        <input type="hidden" id="parent-id">
                         <div class="mb-3">
                             <label for="message-text" class="form-label">Your Message</label>
                             <textarea class="form-control" id="message-text" rows="4" 
@@ -161,7 +193,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" id="send-btn">
-                            <i class="bi bi-send-fill me-1"></i> Send Message
+                            <i class="bi bi-send-fill me-1"></i> <span id="send-btn-text">Send Message</span>
                         </button>
                     </div>
                 </form>

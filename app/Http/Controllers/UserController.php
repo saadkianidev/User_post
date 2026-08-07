@@ -31,7 +31,6 @@ class UserController extends Controller
 
         $message->load('sender');
 
-        // Save to DB + broadcast via Reverb instantly
         $user->notify(new MessageNotification($message));
 
         return response()->json([

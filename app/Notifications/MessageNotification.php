@@ -32,6 +32,8 @@ class MessageNotification extends Notification implements ShouldBroadcast
             'sender_id'   => $this->message->sender_id,
             'sender_name' => $this->message->sender->name,
             'content'     => \Str::limit($this->message->content, 60),
+            'parent_id'   => $this->message->parent_id,
+            'is_reply'    => $this->message->parent_id !== null,
         ];
     }
 

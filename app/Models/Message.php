@@ -14,6 +14,7 @@ class Message extends Model
         'receiver_id',
         'content',
         'read_at',
+        'parent_id',
     ];
 
     protected $casts = [
@@ -28,5 +29,15 @@ class Message extends Model
     public function receiver()
     {
         return $this->belongsTo(User::class, 'receiver_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Message::class, 'parent_id');
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Message::class, 'parent_id');
     }
 }
